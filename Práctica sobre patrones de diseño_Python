@@ -1,0 +1,73 @@
+# Patrón Singleton: Administra la base de datos de animales
+class AnimalDatabase:
+    _instance = None
+
+    def __new__(cls):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+            cls._instance.animales = {}
+        return cls._instance
+
+    def agregar_animal(self, animal):
+        self.animales[animal.nombre] = animal
+
+    def obtener_animal(self, nombre):
+        return self.animales.get(nombre)
+
+# Clase base para todos los animales
+class Animal:
+    def __init__(self, nombre, habitat):
+        self.nombre = nombre
+        self.habitat = habitat
+
+    def __str__(self):
+        return f"{self.nombre} se encuentra en {self.habitat}"
+
+# Clases derivadas para diferentes tipos de animales
+class Mamifero(Animal):
+    def __init__(self, nombre, habitat, sonido, tipo):
+        super().__init__(nombre, habitat)
+        self.sonido = sonido
+        self.tipo = tipo
+
+    def __str__(self):
+        return f"{super().__str__()}, hace el sonido {self.sonido} y es {self.tipo}"
+
+class Ave(Animal):
+    def __init__(self, nombre, habitat, envergadura):
+        super().__init__(nombre, habitat)
+        self.envergadura = envergadura
+
+    def __str__(self):
+        return f"{super().__str__()}, con una envergadura de {self.envergadura} pulgadas"
+
+# Función principal
+def principal():
+    # Crear instancia de la base de datos de animales (Singleton)
+    base_de_datos_animales = AnimalDatabase()
+
+    # Agregar animales a la base de datos
+    base_de_datos_animales.agregar_animal(Mamifero("Tigre", "selvas", "rugido", "depredador"))
+    base_de_datos_animales.agregar_animal(Mamifero("Elefante", "bosques", "trompeta", "herbívoro"))
+    base_de_datos_animales.agregar_animal(Ave("Águila", "montañas", 72))
+    base_de_datos_animales.agregar_animal(Mamifero("León", "praderas", "rugido", "depredador"))
+    base_de_datos_animales.agregar_animal(Mamifero("Jirafa", "sabanas", "graznido", "herbívoro"))
+    base_de_datos_animales.agregar_animal(Ave("Búho", "bosques", 60))
+    base_de_datos_animales.agregar_animal(Mamifero("Oso", "bosques", "rugido", "depredador"))
+    base_de_datos_animales.agregar_animal(Mamifero("Cebra", "praderas", "relincho", "herbívoro"))
+    base_de_datos_animales.agregar_animal(Ave("Pájaro carpintero", "bosques", 20))
+    base_de_datos_animales.agregar_animal(Mamifero("Rinoceronte", "praderas", "resoplido", "herbívoro"))
+
+    # Solicitar al usuario que ingrese el nombre del animal
+    nombre_animal = input("Ingrese el nombre del animal: ")
+
+    # Obtener y mostrar el animal de la base de datos
+    animal = base_de_datos_animales.obtener_animal(nombre_animal)
+    if animal:
+        print(f"Animal encontrado: {animal}")
+    else:
+        print(f"No se encontró el animal con el nombre '{nombre_animal}'")
+
+if __name__ == "__main__":
+    principal()
+
